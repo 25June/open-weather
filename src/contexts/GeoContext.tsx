@@ -6,31 +6,26 @@ import {
   useCallback,
   useMemo,
 } from 'react';
+import { GeoLocation } from 'src/models/geoLocation';
+import { defaultLocation } from 'assets/mock/defaultLocation';
 
 type GeoContextProps = {
-  setGeoLocation: (lon: number, lat: number) => void;
-  longitude: number;
-  latitude: number;
+  setSelectedLocation: (data: GeoLocation) => void;
+  selectedLocation: GeoLocation;
 };
 
 const GeoContext = createContext<GeoContextProps>({
-  setGeoLocation: () => {},
-  longitude: 0,
-  latitude: 0,
+  setSelectedLocation: () => {},
+  selectedLocation: defaultLocation,
 });
 
 export const GeoProvider = ({ children }: PropsWithChildren<{}>) => {
-  const [longitude, setLongitude] = useState<number>(0);
-  const [latitude, setLatitude] = useState<number>(0);
-
-  const setGeoLocation = useCallback((lon: number, lat: number) => {
-    setLongitude(lon);
-    setLatitude(lat);
-  }, []);
+  const [selectedLocation, setSelectedLocation] =
+    useState<GeoLocation>(defaultLocation);
 
   const value = useMemo(
-    () => ({ setGeoLocation, longitude, latitude }),
-    [setGeoLocation, longitude, latitude]
+    () => ({ selectedLocation, setSelectedLocation }),
+    [selectedLocation, setSelectedLocation]
   );
 
   return <GeoContext.Provider value={value}>{children}</GeoContext.Provider>;

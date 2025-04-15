@@ -1,9 +1,11 @@
 import { Autocomplete, Box, CircularProgress, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GeoLocation } from 'models/geoLocation';
 import { useSearchLocation } from 'hooks/useSearchLocation';
+import { useGetHistorySearch } from 'src/hooks/useGetHistorySearch';
 import { debounce } from 'utils/debounce';
 import * as styles from './styles';
 
@@ -15,6 +17,14 @@ const SearchCity = () => {
     setSelectedLocation,
     selectedLocation,
   } = useSearchLocation();
+  const navigate = useNavigate();
+  const { addHistorySearch } = useGetHistorySearch();
+
+  useEffect(() => {
+    if (selectedLocation) {
+      navigate('/result');
+    }
+  }, [selectedLocation]);
 
   return (
     <Autocomplete
@@ -42,6 +52,8 @@ const SearchCity = () => {
       onChange={(_, newValue) => {
         if (newValue) {
           setSelectedLocation(newValue);
+          addHistorySearch(newValue);
+          navigate('/result');
         }
       }}
       onInputChange={debounce((_, newInputValue) => {
@@ -55,6 +67,7 @@ const SearchCity = () => {
       renderInput={(params) => (
         <TextField
           {...params}
+          onClick={() => navigate('/history')}
           label="Location"
           placeholder="Enter location name"
           slotProps={{

@@ -18,6 +18,7 @@ export default defineConfig(({ mode }): UserConfig => {
     resolve: {
       alias: {
         components: path.resolve(__dirname, 'src/components'),
+        pages: path.resolve(__dirname, 'src/pages'),
         contexts: path.resolve(__dirname, 'src/contexts'),
         utils: path.resolve(__dirname, 'src/utils'),
         assets: path.resolve(__dirname, 'src/assets'),

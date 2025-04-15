@@ -5,8 +5,11 @@ import { useGeoContext } from 'contexts/GeoContext';
 import * as styles from './styles';
 
 const TodayWeather = () => {
-  const { longitude, latitude } = useGeoContext();
-  const { loading, weather } = useGetTodayWeather(longitude, latitude);
+  const { selectedLocation } = useGeoContext();
+  const { loading, weather } = useGetTodayWeather(
+    selectedLocation.lon,
+    selectedLocation.lat
+  );
 
   return (
     <Box sx={styles.container}>

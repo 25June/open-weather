@@ -5,10 +5,10 @@ import Content from './Content';
 import * as styles from './styles';
 
 const Forecast = () => {
-  const { longitude, latitude } = useGeoContext();
+  const { selectedLocation } = useGeoContext();
   const { fiveDayForecast, loading } = useGetForcastFor5Days(
-    longitude,
-    latitude
+    selectedLocation.lon,
+    selectedLocation.lat
   );
 
   return (
