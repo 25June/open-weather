@@ -3,7 +3,6 @@ import {
   PropsWithChildren,
   useContext,
   useState,
-  useCallback,
   useMemo,
 } from 'react';
 import { GeoLocation } from 'src/models/geoLocation';

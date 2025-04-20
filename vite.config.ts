@@ -1,12 +1,21 @@
-import { defineConfig, UserConfig, loadEnv } from 'vite';
+import { defineConfig, UserConfig, loadEnv, type PluginOption } from 'vite';
 import path from 'path';
 import react from '@vitejs/plugin-react';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }): UserConfig => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      visualizer({
+        open: true, // Automatically open the report in your browser
+        filename: 'dist/stats.html', // Output filename
+        gzipSize: true, // Calculate and show gzipped sizes
+        brotliSize: true, // Calculate and show brotli sizes
+      }) as PluginOption,
+    ],
     mode: env.NODE_ENV,
     base: '/',
     define: {
@@ -28,6 +37,16 @@ export default defineConfig(({ mode }): UserConfig => {
         services: path.resolve(__dirname, 'src/services'),
       },
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    },
+    build: {
+      lib: {
+        entry: path.resolve(__dirname, 'src/main.tsx'),
+        name: 'weather-app',
+        fileName: (format) => `weather-app.${format}.js`,
+      },
+      rollupOptions: {
+        external: [/node_modules/],
+      },
     },
   };
 });
