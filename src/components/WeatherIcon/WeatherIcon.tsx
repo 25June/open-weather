@@ -1,54 +1,31 @@
 import { Box } from '@mui/material';
-import Rainicon from 'assets/RainIcon';
-import HeavyRain from 'assets/HeavyRain';
-import ClearSky from 'assets/ClearSky';
-import OvercastClouds from 'assets/OvercastClouds';
-import Clouds from 'assets/Clouds';
-import StormAndRain from 'assets/StormAndRain';
 
 interface Props {
-  description?: string;
   size?: string;
+  weather: {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+  };
 }
 
-const WeatherIcon = ({ description, size = '50px' }: Props) => {
-  let icon = null;
-  switch (description) {
-    case 'clear sky':
-      icon = <ClearSky />;
-      break;
-    case 'light rain':
-    case 'moderate rain':
-      icon = <Rainicon />;
-      break;
-    case 'heavy intensity rain':
-      icon = <HeavyRain />;
-      break;
-    case 'scattered clouds':
-      icon = <Clouds />;
-      break;
-    case 'thunderstorm with heavy rain':
-    case 'thunderstorm with rain':
-      icon = <StormAndRain />;
-      break;
-    case 'broken clouds':
-    case 'overcast clouds':
-      icon = <OvercastClouds />;
-      break;
-    default:
-      icon = <Clouds />;
-      break;
-  }
+const WeatherIcon = ({ weather, size = '50px' }: Props) => {
   return (
     <Box
       sx={{
-        svg: {
-          height: size,
-          width: size,
-        },
+        width: size,
+        height: size,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      {icon}
+      <img
+        alt={weather.description}
+        src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+        style={{ width: '100%', height: '100%' }}
+      />
     </Box>
   );
 };

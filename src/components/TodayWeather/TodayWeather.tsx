@@ -24,7 +24,7 @@ const TodayWeather = () => {
               winds={weather.wind.speed}
               visibility={weather.visibility}
               temperature={weather.main.temp}
-              weatherDescription={weather.weather[0].description}
+              weatherIcon={weather.weather[0]}
               date={
                 weather.dt ? new Date(weather.dt * 1000).toDateString() : ''
               }

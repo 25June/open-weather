@@ -7,7 +7,7 @@ interface Props {
   winds?: number;
   visibility?: number;
   temperature?: number;
-  weatherDescription?: string;
+  weatherIcon?: any;
   date?: string;
 }
 
@@ -16,7 +16,7 @@ const Content = ({
   winds,
   visibility,
   temperature,
-  weatherDescription,
+  weatherIcon,
   date,
 }: Props) => {
   const formatttedVisibility = visibility
@@ -29,14 +29,16 @@ const Content = ({
       <Typography sx={styles.time}>{date}</Typography>
       <Grid container alignItems="center" spacing={2}>
         <Grid>
-          <WeatherIcon description={weatherDescription} size={'5rem'} />
+          <WeatherIcon weather={weatherIcon} size={'5rem'} />
         </Grid>
         <Grid>
           <Typography sx={styles.temperature}>
             {temperature}
             {temperatureUnit}
           </Typography>
-          <Typography sx={styles.description}>{weatherDescription}</Typography>
+          <Typography sx={styles.description}>
+            {weatherIcon.description}
+          </Typography>
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ marginTop: 2 }}>

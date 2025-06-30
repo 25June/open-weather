@@ -31,7 +31,7 @@ const Content = ({ data }: Props) => {
         minute: '2-digit',
       }),
       description: item.weather[0].description,
-      icon: <WeatherIcon description={item.weather[0].description} />,
+      icon: <WeatherIcon weather={item.weather[0]} />,
       temp: `${item.main.temp_min} / ${item.main.temp_max}°C`,
     };
     return {
