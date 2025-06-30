@@ -22,6 +22,8 @@ const Content = ({
   const formatttedVisibility = visibility
     ? `${(visibility / 1000).toFixed(2)} km`
     : 'N/A';
+  const unit = localStorage.getItem('unit') || 'metric';
+  const temperatureUnit = unit === 'imperial' ? '°F' : '°C';
   return (
     <>
       <Typography sx={styles.time}>{date}</Typography>
@@ -30,7 +32,10 @@ const Content = ({
           <WeatherIcon description={weatherDescription} size={'5rem'} />
         </Grid>
         <Grid>
-          <Typography sx={styles.temperature}>{temperature}°C</Typography>
+          <Typography sx={styles.temperature}>
+            {temperature}
+            {temperatureUnit}
+          </Typography>
           <Typography sx={styles.description}>{weatherDescription}</Typography>
         </Grid>
       </Grid>

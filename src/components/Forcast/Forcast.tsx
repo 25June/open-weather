@@ -3,6 +3,7 @@ import { useGetForcastFor5Days } from 'hooks/useGetForcastFor5Days';
 import { useGeoContext } from 'contexts/GeoContext';
 import Content from './Content';
 import * as styles from './styles';
+// import { useGetHistoryForecast } from 'src/hooks/useGetHistoryForcast';
 
 const Forecast = () => {
   const { selectedLocation } = useGeoContext();
@@ -10,6 +11,11 @@ const Forecast = () => {
     selectedLocation.lon,
     selectedLocation.lat
   );
+  // const { historyForecast, loading: loadingHistory } = useGetHistoryForecast({
+  //   lat: selectedLocation.lat,
+  //   lon: selectedLocation.lon,
+  // });
+  // console.log({ historyForecast, loadingHistory });
 
   return (
     <Box sx={styles.container}>

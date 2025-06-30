@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_API_TODAY_WEATHER_URL: string;
   readonly VITE_API_GEO_URL: string;
   readonly VITE_API_FORECASE_URL: string;
+  readonly VITE_API_HISTORY_FORECAST_URL: string;
   // more env variables...
 }
 

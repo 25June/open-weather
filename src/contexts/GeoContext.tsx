@@ -4,6 +4,7 @@ import {
   useContext,
   useState,
   useMemo,
+  useLayoutEffect,
 } from 'react';
 import { GeoLocation } from 'src/models/geoLocation';
 import { defaultLocation } from 'assets/mock/defaultLocation';
@@ -21,6 +22,17 @@ const GeoContext = createContext<GeoContextProps>({
 export const GeoProvider = ({ children }: PropsWithChildren<{}>) => {
   const [selectedLocation, setSelectedLocation] =
     useState<GeoLocation>(defaultLocation);
+
+  useLayoutEffect(() => {
+    const { search } = window.location;
+    if (search) {
+      const params = new URLSearchParams(search);
+      const unit = params.get('unit');
+      if (unit === 'imperial' || unit === 'metric') {
+        localStorage.setItem('unit', unit);
+      }
+    }
+  }, []);
 
   const value = useMemo(
     () => ({ selectedLocation, setSelectedLocation }),
