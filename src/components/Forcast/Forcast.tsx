@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress, Fade } from '@mui/material';
+import { Box, Typography, CircularProgress, Fade, Link } from '@mui/material';
 import { useGetForcastFor5Days } from 'hooks/useGetForcastFor5Days';
 import { useGeoContext } from 'contexts/GeoContext';
 import Content from './Content';
@@ -7,10 +7,15 @@ import * as styles from './styles';
 
 const Forecast = () => {
   const { selectedLocation } = useGeoContext();
-  const { fiveDayForecast, loading } = useGetForcastFor5Days(
-    selectedLocation.lon,
-    selectedLocation.lat
-  );
+  const {
+    fiveDayForecast,
+    loading,
+    description,
+    gettingDescription,
+    activities,
+    places,
+    placesIntro,
+  } = useGetForcastFor5Days(selectedLocation.lon, selectedLocation.lat);
   // const { historyForecast, loading: loadingHistory } = useGetHistoryForecast({
   //   lat: selectedLocation.lat,
   //   lon: selectedLocation.lon,
@@ -24,7 +29,38 @@ const Forecast = () => {
         <Box>{loading && <CircularProgress />}</Box>
       </Fade>
       <Fade in={!loading}>
-        <Box>{fiveDayForecast && <Content data={fiveDayForecast.list} />}</Box>
+        <Box>
+          <Box
+            sx={{
+              height: '100%',
+              maxHeight: gettingDescription ? '1rem' : '100rem',
+              overflow: 'hidden',
+              transition: 'all 0.3s ease-in-out',
+            }}
+          >
+            {gettingDescription && <CircularProgress size={'0.5rem'} />}
+            <Box sx={styles.description(gettingDescription)}>
+              <Typography>{description}</Typography>
+              <br />
+              {activities && (
+                <Typography component={'p'}>{activities}</Typography>
+              )}
+              <br />
+              {places && (
+                <Typography component={'p'}>
+                  {placesIntro}
+                  {places.map((place, index) => (
+                    <Link sx={{ display: 'block' }} key={index}>
+                      {place.name}
+                    </Link>
+                  ))}
+                </Typography>
+              )}
+            </Box>
+          </Box>
+
+          {fiveDayForecast && <Content data={fiveDayForecast.list} />}
+        </Box>
       </Fade>
     </Box>
   );

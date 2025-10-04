@@ -26,8 +26,10 @@ export const date: SxProps = {
 
 export const time: SxProps = { fontSize: '0.825rem', color: '#333' };
 export const tempature: SxProps = { fontSize: '0.825rem', color: '#444' };
-export const description: SxProps = {
+export const description = (loading: boolean): SxProps => ({
   fontSize: '0.825rem',
   color: '#666',
-  textAlign: 'right',
-};
+  textAlign: 'left',
+  transition: 'all 0.5s ease-in-out',
+  opacity: loading ? 0 : 1,
+});

@@ -1,5 +1,9 @@
 import { WeatherResponse, CurrentWeatherResponse } from 'models/common';
 import { GeoLocationResponse } from 'models/geoLocation';
+import {
+  FORCAST_HISTORY_PROMPT,
+  FORECAST_DESCRIPTION_PROMPT,
+} from 'src/utils/prompt';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_TODAY_WEATHER_URL = import.meta.env.VITE_API_TODAY_WEATHER_URL;
@@ -83,4 +87,87 @@ export const getHistoryForecast = (
       console.error('Error fetching hourly forecast data:', error);
       throw error;
     });
+};
+
+export async function postData(url: string, data: any) {
+  const response = await fetch(url, {
+    method: 'POST', // Set the request method to POST
+    headers: {
+      'Content-Type': 'application/json', // Set the content type header (optional, depends on your data format)
+    },
+    body: JSON.stringify(data), // Convert data object to JSON string for sending
+  });
+
+  // Check for successful response
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  // Parse the response data (assuming JSON format)
+  const responseData = await response.json();
+  return responseData;
+}
+
+export const GEMINI_API_KEY = 'AIzaSyA43Zus17ofsEAO4e6NMOYd_hHfAjwPLPk';
+
+export const mockBody = (parts: any[] = []) => {
+  return {
+    contents: [
+      {
+        role: 'user',
+        parts,
+      },
+    ],
+    generationConfig: {
+      responseMimeType: 'application/json',
+    },
+  };
+};
+export function formatText(prompt: string) {
+  return { text: prompt };
+}
+
+export const getForecastDescriptionByAI = (lat: number, lon: number) => {
+  const newParts = [];
+
+  const updatePrompt = FORECAST_DESCRIPTION_PROMPT(lat, lon);
+
+  console.log('updatePrompt', updatePrompt, 'lat', lat, 'lon', lon);
+  newParts.push(formatText(`${updatePrompt}`));
+  return postData(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+    { ...mockBody(newParts) }
+  )
+    .then((response: any) => {
+      const firstPart = response?.candidates?.[0]?.content?.parts?.[0];
+      if (firstPart) {
+        return firstPart.text;
+      }
+      return 'No result found';
+    })
+    .catch((error) => error);
+};
+
+export const getForecastHistoricalByAI = (
+  lat: number,
+  lon: number,
+  stringifyData: string
+) => {
+  const newParts = [];
+  let updatePrompt = FORCAST_HISTORY_PROMPT.replace('LATITUDE', lat.toString());
+  updatePrompt = FORCAST_HISTORY_PROMPT.replace('LONGITUDE', lon.toString());
+  updatePrompt = FORCAST_HISTORY_PROMPT.replace('DATA', stringifyData);
+  newParts.push(formatText(`${updatePrompt}`));
+  return postData(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+    { ...mockBody(newParts) }
+  )
+    .then((response: any) => {
+      const firstPart = response?.candidates?.[0]?.content?.parts?.[0];
+      if (firstPart) {
+        return firstPart.text;
+      }
+      return 'No result found';
+    })
+    .catch((error) => error);
 };

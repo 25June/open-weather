@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { WeatherResponse } from 'models/common';
 import { getForecastFor5Days } from 'services/api';
+import { useGetForecastDescription } from './useGetForecastDesByAI';
 
 export const useGetForcastFor5Days = (lon: number, lat: number) => {
   const [fiveDayForecast, setFiveDayForecast] = useState<WeatherResponse>();
   const [loading, setLoading] = useState<boolean>(false);
+  const {
+    onGetDescription,
+    loading: gettingDescription,
+    description,
+    activities,
+    places,
+    placesIntro,
+  } = useGetForecastDescription();
   useEffect(() => {
     setLoading(true);
     const handler = setTimeout(() => {
@@ -12,6 +21,7 @@ export const useGetForcastFor5Days = (lon: number, lat: number) => {
         getForecastFor5Days(lat, lon)
           .then((data) => {
             setFiveDayForecast(data);
+            onGetDescription(lat, lon);
           })
           .finally(() => setLoading(false));
       } else {
@@ -27,5 +37,10 @@ export const useGetForcastFor5Days = (lon: number, lat: number) => {
   return {
     loading: loading,
     fiveDayForecast: fiveDayForecast,
+    gettingDescription,
+    description,
+    activities,
+    places,
+    placesIntro,
   };
 };
